@@ -48,9 +48,45 @@ class _ItemsState extends State<Items> {
                 ? Card(
                     child: Container(
                       height: 330,
+                                              color: Colors.blue[50],
+
                       padding: EdgeInsets.all(5),
                       child: NativeAdmob(
-                        error: Text('XD'),
+                        error:  Column(
+                          children: [
+                                                        SizedBox(height: 50),
+
+                            Text(
+                              '\n¿Te gusta la app?',
+                              style: TextStyle(
+                                  color: Colors.grey[700],
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 22),
+                            ),
+                            Text(
+                              '\n¡Regálanos una reseña en Google Play Store!😄\n\n⭐⭐⭐⭐⭐',
+                              style: TextStyle(
+                                  color: Colors.grey[700], fontSize: 16),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(height: 20),
+                            FlatButton(
+                              color: Colors.blue,
+                              child: Text(
+                                'Dar reseña 👍',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              onPressed: () async {
+                                const gpsURL =
+                                    'https://play.google.com/store/apps/details?id=com.ejele.tracker_mercado_libre';
+                                if (await canLaunch(gpsURL)) {
+                                  await launch(gpsURL);
+                                }
+                              },
+                            )
+                          ],
+                        
+                  ),
                         // Your ad unit id
                         adUnitID: _adUnitID,
                         controller: _nativeAdController,
@@ -188,7 +224,7 @@ class _ItemsState extends State<Items> {
                                   fontSize: 22),
                             ),
                             Text(
-                              '\n¡Regálanos una reseña en Google Play Store!😄',
+                              '\n¡Regálanos una reseña en Google Play Store!😄\n⭐⭐⭐⭐⭐',
                               style: TextStyle(
                                   color: Colors.grey[700], fontSize: 16),
                               textAlign: TextAlign.center,
