@@ -14,51 +14,58 @@ class _AmazonPageState extends State<AmazonPage> {
   double price;
   bool isLoading = true;
   WebViewController _controller;
+  bool isAProduct = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            backgroundColor: Colors.blue,
-            iconTheme: IconThemeData(
-              color: Colors.white, //change your color here
-            )),
-        body: Stack(
-          children: <Widget>[
-            WebView(
-              initialUrl: "https://www.mercadolibre.com",
-              javascriptMode: JavascriptMode.unrestricted,
-              onWebViewCreated: (WebViewController c) async {
-                _controller = c;
-              },
-              onPageStarted: (url) {
-                setState(() {
-                  isLoading = false;
-                });
-              },
-            ),
-            isLoading
-                ? Center(
-                    child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation(Colors.amber)),
-                  )
-                : Container()
-          ],
+        body: SafeArea(
+          child: Stack(
+            children: <Widget>[
+              WebView(
+                initialUrl: "https://www.mercadolibre.com",
+                javascriptMode: JavascriptMode.unrestricted,
+                onWebViewCreated: (WebViewController c) async {
+                  _controller = c;
+                },
+                onPageStarted: (url) {
+                  print(url);
+                  setState(() {
+                    isLoading = false;
+                  });
+
+                  if (url.length > 100) {
+                    setState(() {
+                      isAProduct = true;
+                    });
+                  }
+                },
+              ),
+              isLoading
+                  ? Center(
+                      child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation(Colors.amber)),
+                    )
+                  : Container()
+            ],
+          ),
         ),
-        floatingActionButton: FloatingActionButton(
-            child: Icon(Icons.add),
-            backgroundColor: Colors.amber,
-            onPressed: () async {
-              Alert.showLoadingAlert(context: context);
-              await getData();
-              Navigator.pop(context);
-              Alert.showAlert(
-                  context: context,
-                  price: price,
-                  url: url,
-                  title: title,
-                  img: img);
-            }));
+        floatingActionButton: isAProduct
+            ? FloatingActionButton(
+                child: Icon(Icons.add),
+                backgroundColor: Colors.amber,
+                onPressed: () async {
+                  Alert.showLoadingAlert(context: context);
+                  await getData();
+                  Navigator.pop(context);
+                  Alert.showAlert(
+                      context: context,
+                      price: price,
+                      url: url,
+                      title: title,
+                      img: img);
+                })
+            : Container());
   }
 
   getData() async {

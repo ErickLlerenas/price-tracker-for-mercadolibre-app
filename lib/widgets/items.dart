@@ -8,7 +8,8 @@ import 'package:mercado_libre/widgets/empty.dart';
 import 'package:background_fetch/background_fetch.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:mercado_libre/helpers/scraper_helper.dart' as Scraper;
-import 'package:mercado_libre/helpers/notification_helper.dart' as NotificationHelper;
+import 'package:mercado_libre/helpers/notification_helper.dart'
+    as NotificationHelper;
 import 'package:flutter_native_admob/flutter_native_admob.dart';
 import 'package:flutter_native_admob/native_admob_controller.dart';
 
@@ -24,6 +25,7 @@ class Items extends StatefulWidget {
 class _ItemsState extends State<Items> {
   List items;
   static const _adUnitID = "ca-app-pub-2724614824004700/6670861421";
+  // static const _testID = "ca-app-pub-3940256099942544/2247696110";
   final _nativeAdController = NativeAdmobController();
 
   @override
@@ -38,9 +40,25 @@ class _ItemsState extends State<Items> {
     setState(() {
       items = widget.items;
     });
+
     double width = MediaQuery.of(context).size.width;
     return items.length != 0
         ? ListView(children: <Widget>[
+            items.length > 0
+                ? Card(
+                    child: Container(
+                      height: 330,
+                      padding: EdgeInsets.all(5),
+                      child: NativeAdmob(
+                        error: Text('XD'),
+                        // Your ad unit id
+                        adUnitID: _adUnitID,
+                        controller: _nativeAdController,
+                        type: NativeAdmobType.full,
+                      ),
+                    ),
+                  )
+                : Container(),
             new Wrap(
                 children: items
                     .map((item) => new Card(
@@ -154,18 +172,46 @@ class _ItemsState extends State<Items> {
                           ),
                         ))
                     .toList()),
-            items.length>0?Card(
-              child: Container(
-                height: 90,
-                padding: EdgeInsets.all(5),
-                child: NativeAdmob(
-                  // Your ad unit id
-                  adUnitID: _adUnitID,
-                  controller: _nativeAdController,
-                  type: NativeAdmobType.banner,
-                ),
-              ),
-            ):Container()
+            items.length > 1
+                ? Card(
+                    child: Container(
+                        color: Colors.blue[50],
+                        height: 200,
+                        padding: EdgeInsets.all(5),
+                        child: Column(
+                          children: [
+                            Text(
+                              '\n¿Te gusta la app?',
+                              style: TextStyle(
+                                  color: Colors.grey[700],
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 22),
+                            ),
+                            Text(
+                              '\n¡Regálanos una reseña en Google Play Store!😄',
+                              style: TextStyle(
+                                  color: Colors.grey[700], fontSize: 16),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(height: 20),
+                            FlatButton(
+                              color: Colors.blue,
+                              child: Text(
+                                'Dar reseña 👍',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              onPressed: () async {
+                                const gpsURL =
+                                    'https://play.google.com/store/apps/details?id=com.ejele.tracker_mercado_libre';
+                                if (await canLaunch(gpsURL)) {
+                                  await launch(gpsURL);
+                                }
+                              },
+                            )
+                          ],
+                        )),
+                  )
+                : Container()
           ])
         : Empty();
   }

@@ -12,13 +12,16 @@ Future<List> getPriceTitleImage(url) async {
   Response response = await client.get(url);
   var document = parse(response.body);
   /************************* GET PRICE **************************/
-  Element priceElement = document.querySelector('span.price-tag > span.price-tag-fraction');
-    
+  Element priceElement =
+      document.querySelector('span.price-tag > span.price-tag-fraction');
+
   if (priceElement == null) price = 0;
 
   if (priceElement != null)
-    price = double.parse(
-        priceElement.text.replaceFirst('\$', '').replaceAll(',', '').replaceAll('.', ''));
+    price = double.parse(priceElement.text
+        .replaceFirst('\$', '')
+        .replaceAll(',', '')
+        .replaceAll('.', ''));
 
   priceTitleImage.add(price);
 
@@ -38,13 +41,18 @@ Future<List> getPriceTitleImage(url) async {
   Element imageElement = document.querySelector('img[itemprop="thumbnailUrl"]');
 
   if (imageElement == null)
-    imageElement = document.querySelector('figure > a > img');
+    imageElement = document.querySelector('figure.ui-pdp-image > img');
 
   if (imageElement == null)
-    imageElement = document.querySelector('img.ui-pdp-image');
+    imageElement =
+        document.querySelector('figure.ui-pdp-gallery__figure > img');
+
+  if (imageElement == null)
+    imageElement = document.querySelector('img[data-index="0"]');
 
   if (imageElement != null) img = imageElement.attributes['src'];
   if (imageElement == null) img = "";
   priceTitleImage.add(img);
+  print(img);
   return priceTitleImage;
 }

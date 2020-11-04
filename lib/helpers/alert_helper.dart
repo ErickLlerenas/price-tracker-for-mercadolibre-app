@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mercado_libre/pages/home_page.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 showAlert(
     {BuildContext context,
@@ -43,6 +44,15 @@ showAlert(
                                     price: price,
                                     img: img,
                                     url: url)));
+                        Fluttertoast.showToast(
+                            msg:
+                                "Ya puedes cerrar la aplicación o agregar más productos",
+                            toastLength: Toast.LENGTH_LONG,
+                            gravity: ToastGravity.BOTTOM,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: Colors.teal,
+                            textColor: Colors.white,
+                            fontSize: 15.0);
                       },
                       child: Text(
                         "AGREGAR",
@@ -85,5 +95,3 @@ showLoadingAlert({BuildContext context}) {
         );
       });
 }
-
-
