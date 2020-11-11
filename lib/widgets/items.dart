@@ -12,6 +12,7 @@ import 'package:mercado_libre/helpers/notification_helper.dart'
     as NotificationHelper;
 import 'package:flutter_native_admob/flutter_native_admob.dart';
 import 'package:flutter_native_admob/native_admob_controller.dart';
+import 'package:in_app_review/in_app_review.dart';
 
 class Items extends StatefulWidget {
   final List items;
@@ -27,6 +28,7 @@ class _ItemsState extends State<Items> {
   static const _adUnitID = "ca-app-pub-2724614824004700/6670861421";
   // static const _testID = "ca-app-pub-3940256099942544/2247696110";
   final _nativeAdController = NativeAdmobController();
+  final InAppReview _inAppReview = InAppReview.instance;
 
   @override
   void initState() {
@@ -34,6 +36,9 @@ class _ItemsState extends State<Items> {
     NotificationHelper.initLocalPushNotification();
     initPlatformState();
   }
+
+  Future<void> _openStoreListing() => _inAppReview.openStoreListing(
+      appStoreId: 'com.ejele.tracker_mercado_libre');
 
   @override
   Widget build(BuildContext context) {
@@ -48,14 +53,12 @@ class _ItemsState extends State<Items> {
                 ? Card(
                     child: Container(
                       height: 330,
-                                              color: Colors.blue[50],
-
+                      color: Colors.blue[50],
                       padding: EdgeInsets.all(5),
                       child: NativeAdmob(
-                        error:  Column(
+                        error: Column(
                           children: [
-                                                        SizedBox(height: 50),
-
+                            SizedBox(height: 50),
                             Text(
                               '\n¿Te gusta la app?',
                               style: TextStyle(
@@ -77,16 +80,11 @@ class _ItemsState extends State<Items> {
                                 style: TextStyle(color: Colors.white),
                               ),
                               onPressed: () async {
-                                const gpsURL =
-                                    'https://play.google.com/store/apps/details?id=com.ejele.tracker_mercado_libre';
-                                if (await canLaunch(gpsURL)) {
-                                  await launch(gpsURL);
-                                }
+                                await _openStoreListing();
                               },
                             )
                           ],
-                        
-                  ),
+                        ),
                         // Your ad unit id
                         adUnitID: _adUnitID,
                         controller: _nativeAdController,
@@ -237,11 +235,7 @@ class _ItemsState extends State<Items> {
                                 style: TextStyle(color: Colors.white),
                               ),
                               onPressed: () async {
-                                const gpsURL =
-                                    'https://play.google.com/store/apps/details?id=com.ejele.tracker_mercado_libre';
-                                if (await canLaunch(gpsURL)) {
-                                  await launch(gpsURL);
-                                }
+                                await _openStoreListing();
                               },
                             )
                           ],
